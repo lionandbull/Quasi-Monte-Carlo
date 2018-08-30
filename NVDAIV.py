@@ -3,9 +3,9 @@ import scipy.optimize as optimization
 from scipy.stats import norm
 
 def func(K, sigma):
-    r = 0.0222  ## 10 years risk-free rate, 08/14/17
-    S0 = 10.84  ## The price of F Stock at time: 4:00 pm, date: 08/15/2017
-    T = 66.0/360 ## data from 08/15 to 10/20
+    r = 0.0111  ## 3 months risk-free rate, 10/26/17
+    S0 = 195.69  ## The price of NVDA Stock at close: 4:00 pm, date: 10/26/2017
+    T = 90.0/360
     d1 = (np.log(S0*1.0/K)+(r+0.5*sigma**2)*T)*1.0/(sigma*np.sqrt(T))
     d2 = d1-sigma*np.sqrt(T)
     C_model = S0*norm.cdf(d1)-K*np.exp(-r*T)*norm.cdf(d2)
@@ -15,10 +15,14 @@ def func(K, sigma):
 
 Theta_list = []
 Covariance = []
-K = np.array([11, 15, 12, 5, 10, 14, 13])
+K = np.array([200, 180, 195, 220, 170, 190, 210, 23, 165, 250, 260, 205, 90,
+              160, 185, 270, 230, 290, 175])
 ## Get the call option price from actual data
-C_actual = [0.5 * (0.29+0.32), 0.5*(0+0.02), 0.5*(0.04+0.06), 0.5*(5.85+6.35),
-            0.5 * (0.97 + 1.02), 0.5*(0+0.01), 0.5*(0+0.03)]
+C_actual = [0.5 * (12.9+13.2), 0.5*(23.85+24.25), 0.5*(15.25+15.6), 0.5*(6.4+6.55),
+            0.5 * (30.65 + 31.4), 0.5*(17.9+18.1), 0.5*(9.2+9.45), 0.5*(171.5+176.1),
+            0.5*(34.65+35.15), 0.5*(1.97+2.05), 0.5*(1.25+1.40), 0.5 * (10.95+ 11.25),
+            0.5*(105.3 + 107.75), 0.5*(38.65+39.4), 0.5*(20.55+21.2),
+            0.5 * (0.84 + 1), 0.5*(4.35+4.45), 0.5*(0.39+0.48), 0.5*(27.2+27.55)]
 
 ## Get Theta_list
 #sigma_list = np.array([0.2, 0.3, 0.02, 3])

@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from prettytable import PrettyTable
 
 class Correlation:
     def __init__(self, *files):
@@ -32,8 +33,10 @@ class Correlation:
             for i in range(len(pricelist)):
                 if i == len(pricelist) - 1:
                     break
-                singleReturn.append(np.log(pricelist[i + 1] / pricelist[i]))
+                singleReturn.append(np.log(pricelist[i + 1] / pricelist[i])[0])
             self.returns.append(singleReturn)
+
+
 
     def calReturnsSquare(self):
         for i in range(len(self.returns)):
@@ -44,6 +47,12 @@ class Correlation:
             self.volatility.append(np.sum(np.asarray(self.returnsSquare[i]) *
                                    np.asarray(self.weight)))
 
+        # for i in range(len(self.files)):
+        #     sigma = 1
+        #     for j in range(self.returnsSquare):
+        #         sigma = 0.94 + 0.06*self.returnsSquare[i]
+        #         self.volatility.append()
+
     def calCovariance(self):
         for i in range(len(self.files) - 1):
             covarianceList = []
@@ -52,6 +61,7 @@ class Correlation:
                 returnY = np.asarray(self.returns[j])
                 covarianceList.append(np.sum(returnX * returnY * np.asarray(self.weight)))
             self.covariance.append(covarianceList)
+
 
     def calCorr(self):
         for i in range(len(self.files)):
@@ -70,6 +80,43 @@ class Correlation:
         for row in self.corr:
             print(row)
 
+    def printTable(self):
+        x = PrettyTable(["Ticker", "AAPL", "IBM", "NVDA", "MSFT", "F"])
+        x.align["Value"] = "l"
+        x.padding_width = 1
+        x.add_row(["AAPL",
+                   self.corr[0][0],
+                   self.corr[0][1],
+                   self.corr[0][2],
+                   self.corr[0][3],
+                   self.corr[0][4]])
+        x.add_row(["IBM",
+                   self.corr[1][0],
+                   self.corr[1][1],
+                   self.corr[1][2],
+                   self.corr[1][3],
+                   self.corr[1][4]])
+        x.add_row(["NVDA",
+                   self.corr[2][0],
+                   self.corr[2][1],
+                   self.corr[2][2],
+                   self.corr[2][3],
+                   self.corr[2][4]])
+        x.add_row(["MSFT",
+                   self.corr[3][0],
+                   self.corr[3][1],
+                   self.corr[3][2],
+                   self.corr[3][3],
+                   self.corr[3][4]])
+        x.add_row(["F",
+                   self.corr[4][0],
+                   self.corr[4][1],
+                   self.corr[4][2],
+                   self.corr[4][3],
+                   self.corr[4][4]])
+
+        print(x)
+
 
 
 # test = Correlation('AAPL.csv', 'IBM.csv', 'NVDA.csv', 'MSFT.csv', 'F.csv')
@@ -81,6 +128,7 @@ class Correlation:
 # test.calCovariance()
 # test.calCorr()
 # test.toMatrixForm()
+# test.printTable()
 
 
 # test = Correlation('test1.csv', 'test2.csv')

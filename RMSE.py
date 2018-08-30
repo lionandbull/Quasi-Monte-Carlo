@@ -18,10 +18,10 @@ corr = corrMatrix.corr
 Xaxis = []
 MC = []
 QMC = []
-MC_price = PricingBO_MC(100, 50, 0.0219, 0.15, 0.01, 1000, corr, [0.35, 0.3, 0.1, 0.1, 0.15], 0.227, 0.381,
-                                0.159, 0.202, 0.171)
-QMC_price = PricingBO_QMC(100, 50, 0.0219, 0.15, 0.01, 1000, corr, [0.35, 0.3, 0.1, 0.1, 0.15], 0.227, 0.381,
-                                0.159, 0.202, 0.171)
+MC_price = PricingBO_MC([157.41, 153.06, 195.69, 78.76, 12.27], 120, 0.0111, 0.25, 0.01, 1000, corr, [0.35, 0.3, 0.1, 0.1, 0.15],0.219, 0.383, 0.155, 0.173,
+                                0.166)
+QMC_price = PricingBO_QMC([157.41, 153.06, 195.69, 78.76, 12.27], 120, 0.0111, 0.25, 0.01, 1000, corr, [0.35, 0.3, 0.1, 0.1, 0.15], 0.219, 0.383, 0.155, 0.173,
+                                0.166)
 QMC_price.generatePrimeInt()
 QMC_price.generateHaltonSequences()
 
@@ -35,6 +35,11 @@ print("finished")
 
 def RMSE_QMC(m, n):
     difference = []
+    QMC_price = PricingBO_QMC([157.41, 153.06, 195.69, 78.76, 12.27], 120, 0.0111, 0.25, 0.01, 1000, corr,
+                              [0.35, 0.3, 0.1, 0.1, 0.15], 0.219, 0.383, 0.155, 0.173,
+                                0.166)
+    QMC_price.generatePrimeInt()
+    QMC_price.generateHaltonSequences()
     QMC_price.setIteration(n)
     for i in range(m):
         difference.append( (QMC_price.pricingByQMC() - true_price_QMC) ** 2 )
@@ -43,6 +48,9 @@ def RMSE_QMC(m, n):
 
 
 def RMSE_MC(m, n):
+    MC_price = PricingBO_MC([157.41, 153.06, 195.69, 78.76, 12.27], 120, 0.0111, 0.25, 0.01, 1000, corr,
+                            [0.35, 0.3, 0.1, 0.1, 0.15], 0.219, 0.383, 0.155, 0.173,
+                                0.166)
     difference = []
     MC_price.setIteration(n)
     for i in range(m):

@@ -25,11 +25,11 @@ class PricingBO_QMC:
         self.iterations = int(T / dt) ## For generating sequence
         self.iteration = iteration ## For generating asset paths
         self.dt = dt
-        self.Xaxis = []
-        self.Yaxis = []
+        #self.Xaxis = []
+        #self.Yaxis = []
 
     def generatePrimeInt(self):
-        for num in range(2, 100000000000):
+        for num in range(2, 100):
             if len(self.primeInt) == len(self.IV):
                 break
             else:
@@ -111,8 +111,6 @@ class PricingBO_QMC:
             self.BM[i] = np.hstack((np.array([0]), self.BM[i]))
 
     def pricingByQMC(self):
-        #self.generatePrimeInt()
-        #self.generateHaltonSequences()
         self.Xaxis = np.arange(0, self.T, self.dt)
         self.Xaxis = np.hstack((self.Xaxis, np.array([self.T])))
 
@@ -127,38 +125,40 @@ class PricingBO_QMC:
             for i in range(len(self.IV)):
                 p1 = (self.r - (self.IV[i] ** 2) / 2) * self.Xaxis
                 p2 = self.IV[i] * np.sqrt(self.dt) * self.BM[i]
-                self.S.append(self.S0 * np.exp(p1 + p2))
-                self.Yaxis.append(self.S)
+                self.S.append(self.S0[i] * np.exp(p1 + p2))
+                #self.Yaxis.append(self.S)
                 S_T.append(self.S[i][-1])
             payoff = max(np.sum(np.asarray(S_T) * np.asarray(self.propCoef)) - self.K, 0)
             V.append(payoff)
         price = np.exp(-self.r * self.T) * np.sum(V) / self.iteration
         return price
 
-    def plot_FourAssetsOnce(self, n):
-        for i in range(len(self.IV)):
-            plt.plot(self.Xaxis, self.Yaxis[n][i])
-        plt.show()
-
-    def plot_oneAssetNtimes(self, asset, N):
-        if N > self.iteration:
-            print("N should be less or equal to the parameter 'iteration' !")
-        else:
-            number = 0
-            if asset == "AAPL":
-                number = 0
-            elif asset == "IBM":
-                number = 1
-            elif asset == "NVDA":
-                number = 2
-            elif asset == "MSFT":
-                number = 3
-            elif asset == "F":
-                number = 4
-
-            for n in range(N):
-                plt.plot(self.Xaxis, self.Yaxis[n][number])
-            plt.show()
+    # def plot_FiveAssetsOnce(self, n):
+    #     print(self.Yaxis)
+    #     for i in range(len(self.IV)):
+    #         plt.plot(self.Xaxis, self.Yaxis[n][i])
+    #     print(len(self.Xaxis), len(self.Yaxis[0]))
+    #     plt.show()
+    #
+    # def plot_oneAssetNtimes(self, asset, N):
+    #     if N > self.iteration:
+    #         print("N should be less or equal to the parameter 'iteration' !")
+    #     else:
+    #         number = 0
+    #         if asset == "AAPL":
+    #             number = 0
+    #         elif asset == "IBM":
+    #             number = 1
+    #         elif asset == "NVDA":
+    #             number = 2
+    #         elif asset == "MSFT":
+    #             number = 3
+    #         elif asset == "F":
+    #             number = 4
+    #
+    #         for n in range(N):
+    #             plt.plot(self.Xaxis, self.Yaxis[n][number])
+    #         plt.show()
 
 
 
@@ -176,12 +176,14 @@ class PricingBO_QMC:
 #
 # #pricing basket option by QMC
 #
-# basketOption = PricingBO_QMC(100, 120, 0.0219, 1, 0.01, 1000, corr, [0.35, 0.3, 0.1, 0.1, 0.15], 0.227, 0.381, 0.159, 0.202,
-#                               0.171)
+# basketOption = PricingBO_QMC([157.41, 153.06, 195.69, 78.76, 12.27], 120, 0.0111, 0.25, 0.01, 1000, corr, [0.35, 0.3, 0.1, 0.1, 0.15], 0.219, 0.383, 0.155, 0.173,
+#                                 0.166)
 # basketOption.generatePrimeInt()
 # basketOption.generateHaltonSequences()
 # basketOption.setIteration(5000)
-# print(basketOption.pricingByQMC())
+# basketOption.pricingByQMC()
+
+
 
 
 

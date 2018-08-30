@@ -17,8 +17,8 @@ class PricingBO_MC:
         self.iteration = iteration  ## For generating asset paths
         self.dt = dt
         self.NDSeq = []
-        self.Xaxis = []
-        self.Yaxis = []
+        #self.Xaxis = []
+        #self.Yaxis = []
 
     def setIteration(self, iteration):
         self.iteration = iteration
@@ -55,38 +55,38 @@ class PricingBO_MC:
             for i in range(len(self.IV)):
                 p1 = (self.r - (self.IV[i] ** 2) / 2) * self.Xaxis
                 p2 = self.IV[i] * np.sqrt(self.dt) * self.BM[i]
-                self.S.append(self.S0 * np.exp(p1 + p2))
-                self.Yaxis.append(self.S)
+                self.S.append(self.S0[i] * np.exp(p1 + p2))
+                #self.Yaxis.append(self.S)
                 S_T.append(self.S[i][-1])
             payoff = max(np.sum(np.asarray(S_T) * np.asarray(self.propCoef)) - self.K, 0)
             V.append(payoff)
         price = np.exp(-self.r * self.T) * np.sum(V) / self.iteration
         return price
 
-    def plot_FourAssetsOnce(self, n):
-        for i in range(len(self.IV)):
-            plt.plot(self.Xaxis, self.Yaxis[n][i])
-        plt.show()
-
-    def plot_oneAssetNtimes(self, asset, N):
-        if N > self.iteration:
-            print("N should be less or equal to the parameter 'iteration' !")
-        else:
-            number = 0
-            if asset == "AAPL":
-                number = 0
-            elif asset == "IBM":
-                number = 1
-            elif asset == "NVDA":
-                number = 2
-            elif asset == "MSFT":
-                number = 3
-            elif asset == "F":
-                number = 4
-
-            for n in range(N):
-                plt.plot(self.Xaxis, self.Yaxis[n][number])
-            plt.show()
+    # def plot_FourAssetsOnce(self, n):
+    #     for i in range(len(self.IV)):
+    #         plt.plot(self.Xaxis, self.Yaxis[n][i])
+    #     plt.show()
+    #
+    # def plot_oneAssetNtimes(self, asset, N):
+    #     if N > self.iteration:
+    #         print("N should be less or equal to the parameter 'iteration' !")
+    #     else:
+    #         number = 0
+    #         if asset == "AAPL":
+    #             number = 0
+    #         elif asset == "IBM":
+    #             number = 1
+    #         elif asset == "NVDA":
+    #             number = 2
+    #         elif asset == "MSFT":
+    #             number = 3
+    #         elif asset == "F":
+    #             number = 4
+    #
+    #         for n in range(N):
+    #             plt.plot(self.Xaxis, self.Yaxis[n][number])
+    #         plt.show()
 
 
 ##generate corr matrix
@@ -104,8 +104,4 @@ class PricingBO_MC:
 
 ##pricing basket option by MC
 
-#basketOption = PricingBO_MC(100, 90, 0.0219, 1, 0.01, 1000, corr, [0.35, 0.3, 0.1, 0.1, 0.15], 0.227, 0.381, 0.159, 0.202,
-#                              0.171)
-#basketOption.setIteration(1000)
-# print(basketOption.pricingByMC())
 
